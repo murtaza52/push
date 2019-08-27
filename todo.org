@@ -1,0 +1,17 @@
+
+* clojure lib
+
+** backend
+   - a global channel to receive events
+   - create many core.async prcoesses to simulate agents which will write to the global channel
+   - one core.async process - it encloses the pub zeromq socket, and takes as input the global events channel.
+   - it reads from the events channel and then pushes them to zeromq socket
+   - it also takes a fn which registers the pub with the discovery service
+
+** frontend
+   - third global async channels
+   - one which takes subscriptions
+   - and the other which accepts info abt publishers (susbcribes / unsubscribes)
+   - third channel on which it returns all messages - every time it receives a subscription it returns a core.async channel which is subscribed to it using the fn. 
+   - one async process which accepts the above 2 channels
+   - it keeps an internal state of all subscriptions, sends it to all subscribers when a new subscriber is added
